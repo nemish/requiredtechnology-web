@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import ReCAPTCHADebug from "./ReCAPTCHADebug";
 
 interface FormData {
   name: string;
@@ -70,6 +71,7 @@ export default function ContactForm() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <ReCAPTCHADebug />
       <form
         onSubmit={handleSubmit}
         className="bg-white p-10 rounded-xl shadow-lg"
