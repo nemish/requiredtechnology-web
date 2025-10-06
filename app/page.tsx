@@ -313,7 +313,7 @@ export default function Home() {
             <div>
               <h4 className="text-lg font-semibold mb-6">Contact</h4>
               <ul className="space-y-2 text-gray-300">
-                <li>hello@required.ee</li>
+                <li>info@required.ee</li>
                 <li>+372 578 38148</li>
                 <li>Tallinn, Estonia</li>
               </ul>

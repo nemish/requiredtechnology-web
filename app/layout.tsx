@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Montserrat as Montserrat_Mono } from "next/font/google";
 import "./globals.css";
+import ReCAPTCHAProvider from "./components/ReCAPTCHAProvider";
 
 const montserratSans = Montserrat({
   variable: "--font-montserrat-sans",
@@ -39,7 +40,7 @@ export default function RootLayout({
       <body
         className={`${montserratSans.variable} ${montserratMono.variable} antialiased`}
       >
-        {children}
+        <ReCAPTCHAProvider>{children}</ReCAPTCHAProvider>
       </body>
     </html>
   );
