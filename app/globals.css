@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --primary-blue: #2563eb;
+  --primary-blue: #1d4ed8;
   --primary-blue-light: #3b82f6;
-  --primary-blue-dark: #1d4ed8;
+  --primary-blue-dark: #1e40af;
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
@@ -30,7 +30,7 @@ html {
 body {
   background: #ffffff;
   color: #1a1a1a;
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-montserrat-sans), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -6,7 +6,7 @@ import {
   LightBulbIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
-import { EnvelopeIcon, PhoneIcon, MapPinIcon } from "@heroicons/react/24/solid";
+import ContactForm from "./components/ContactForm";
 
 export default function Home() {
   return (
@@ -44,7 +44,7 @@ export default function Home() {
                 </a>
                 <a
                   href="#contact"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-800 transition-colors"
                 >
                   Contact
                 </a>
@@ -72,7 +72,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <a
                 href="#contact"
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center justify-center"
+                className="bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-800 transition-colors inline-flex items-center justify-center"
               >
                 Get Started
                 <ArrowRightIcon className="ml-2 h-5 w-5" />
@@ -189,20 +189,6 @@ export default function Home() {
                 expertise with strategic thinking to deliver solutions that
                 drive real results.
               </p>
-              <div className="grid grid-cols-2 gap-8 mt-8">
-                <div className="text-center why-choose-card">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">
-                    50+
-                  </div>
-                  <div className="text-gray-600">Projects Completed</div>
-                </div>
-                <div className="text-center why-choose-card">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">
-                    5+
-                  </div>
-                  <div className="text-gray-600">Years Experience</div>
-                </div>
-              </div>
             </div>
             <div className="bg-white p-10 rounded-xl shadow-lg">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">
@@ -299,104 +285,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-            <div>
-              <form className="bg-white p-10 rounded-xl shadow-lg">
-                <div className="mb-8">
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div className="mb-8">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div className="mb-8">
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 mb-2"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                    placeholder="Tell us about your project"
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                >
-                  Send Message
-                </button>
-              </form>
-            </div>
-
-            <div className="space-y-12">
-              <div className="flex items-start space-x-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <EnvelopeIcon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Email
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    hello@required.ee
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-6">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <PhoneIcon className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Phone
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    +372 578 38148
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-6">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <MapPinIcon className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Location
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Tallinn, Estonia
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ContactForm />
         </div>
       </section>
 
@@ -431,7 +320,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Required Technology. All rights reserved.</p>
+            <p>&copy; 2025 Required Technology OÜ. All rights reserved.</p>
           </div>
         </div>
       </footer>
