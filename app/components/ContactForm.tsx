@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import ReCAPTCHADebug from "./ReCAPTCHADebug";
+import { event } from "../lib/gtag";
 
 interface FormData {
   name: string;
@@ -58,12 +59,36 @@ export default function ContactForm() {
       if (response.ok) {
         setSubmitStatus("success");
         setFormData({ name: "", email: "", message: "" });
+
+        // Track successful form submission
+        event({
+          action: "submit",
+          category: "contact_form",
+          label: "success",
+          value: 1,
+        });
       } else {
         setSubmitStatus("error");
+
+        // Track failed form submission
+        event({
+          action: "submit",
+          category: "contact_form",
+          label: "error",
+          value: 0,
+        });
       }
     } catch (error) {
       console.error("Form submission error:", error);
       setSubmitStatus("error");
+
+      // Track form submission error
+      event({
+        action: "submit",
+        category: "contact_form",
+        label: "exception",
+        value: 0,
+      });
     } finally {
       setIsSubmitting(false);
     }
