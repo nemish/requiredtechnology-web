@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import ContactForm from "./components/ContactForm";
 import TestModeToggle from "./components/TestModeToggle";
+import CookieBanner from "./components/CookieBanner";
 
 export default function Home() {
   return (
@@ -327,6 +328,9 @@ export default function Home() {
 
       {/* Test Mode Toggle - Only visible in development or when test mode is enabled */}
       <TestModeToggle />
+
+      {/* Cookie Consent Banner */}
+      <CookieBanner />
     </div>
   );
 }
