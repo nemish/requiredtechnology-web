@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Montserrat, Montserrat as Montserrat_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ReCAPTCHAProvider from "./components/ReCAPTCHAProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-const montserratSans = Montserrat({
+const inter = Inter({
   variable: "--font-montserrat-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
-const montserratMono = Montserrat_Mono({
-  variable: "--font-montserrat-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,9 +39,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${montserratSans.variable} ${montserratMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ReCAPTCHAProvider>{children}</ReCAPTCHAProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />

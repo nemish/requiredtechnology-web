@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import ReCAPTCHADebug from "./ReCAPTCHADebug";
 import { event } from "../lib/gtag";
+import { PaperAirplaneIcon, CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 interface FormData {
   name: string;
@@ -99,12 +100,13 @@ export default function ContactForm() {
       <ReCAPTCHADebug />
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-10 rounded-xl shadow-lg border border-gray-700"
+        className="form-container"
       >
+        {/* Name Field */}
         <div className="mb-8">
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="form-label"
           >
             Name
           </label>
@@ -115,14 +117,16 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleInputChange}
             required
-            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
+            className="form-input"
             placeholder="Your name"
           />
         </div>
+
+        {/* Email Field */}
         <div className="mb-8">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="form-label"
           >
             Email
           </label>
@@ -133,52 +137,83 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleInputChange}
             required
-            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
+            className="form-input"
             placeholder="your@email.com"
           />
         </div>
-        <div className="mb-8">
+
+        {/* Message Field */}
+        <div className="mb-10">
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="form-label"
           >
             Message
           </label>
           <textarea
             id="message"
             name="message"
-            rows={4}
+            rows={5}
             value={formData.message}
             onChange={handleInputChange}
             required
-            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent placeholder-gray-400"
-            placeholder="Tell us about your project"
-          ></textarea>
+            className="form-input resize-none"
+            placeholder="Tell us about your project..."
+          />
         </div>
 
+        {/* Success Message */}
         {submitStatus === "success" && (
-          <div className="mb-6 p-4 bg-green-900 border border-green-700 rounded-lg">
-            <p className="text-green-300 text-sm">
-              Thank you for your message! We'll get back to you soon.
-            </p>
+          <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
+            <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-emerald-400 font-medium text-sm">Message sent successfully!</p>
+              <p className="text-emerald-400/70 text-sm mt-1">
+                Thank you for reaching out. We'll get back to you soon.
+              </p>
+            </div>
           </div>
         )}
 
+        {/* Error Message */}
         {submitStatus === "error" && (
-          <div className="mb-6 p-4 bg-red-900 border border-red-700 rounded-lg">
-            <p className="text-red-300 text-sm">
-              Sorry, there was an error sending your message. Please try again.
-            </p>
+          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+            <ExclamationCircleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-red-400 font-medium text-sm">Failed to send message</p>
+              <p className="text-red-400/70 text-sm mt-1">
+                Something went wrong. Please try again or contact us directly.
+              </p>
+            </div>
           </div>
         )}
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary w-full py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          {isSubmitting ? "Sending..." : "Send Message"}
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Sending...</span>
+            </>
+          ) : (
+            <>
+              <span>Send Message</span>
+              <PaperAirplaneIcon className="w-5 h-5" />
+            </>
+          )}
         </button>
+
+        {/* Privacy Note */}
+        <p className="mt-8 text-xs text-center text-[var(--color-text-muted)]">
+          By submitting this form, you agree to our privacy policy. We'll never share your information.
+        </p>
       </form>
     </div>
   );
