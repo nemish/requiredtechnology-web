@@ -1,7 +1,7 @@
 import { EmailTemplate } from "@/app/components/EmailTemplate";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const getResend = () => new Resend(process.env.RESEND_API_KEY);
 
 async function verifyRecaptcha(
   token: string
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: "Required Technology <onboarding@required.ee>",
       to: ["info@required.ee"],
       subject: `required.ee - New Contact Form Submission from ${name}`,
