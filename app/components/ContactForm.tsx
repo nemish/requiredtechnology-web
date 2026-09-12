@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useEffect, useRef, useState } from "react";
 import ReCAPTCHADebug from "./ReCAPTCHADebug";
 import { event } from "../lib/gtag";
+import { getRecaptchaToken, loadRecaptcha } from "../lib/recaptcha";
 import { PaperAirplaneIcon, CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 interface FormData {
@@ -13,7 +13,7 @@ interface FormData {
 }
 
 export default function ContactForm() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -23,6 +23,21 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
+
+  // Load the reCAPTCHA script when the form scrolls into view, so a token
+  // is ready by submit time (focus is the fallback trigger).
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        loadRecaptcha();
+        observer.disconnect();
+      }
+    });
+    observer.observe(form);
+    return () => observer.disconnect();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,11 +55,7 @@ export default function ContactForm() {
     setSubmitStatus("idle");
 
     try {
-      // Generate reCAPTCHA token
-      let recaptchaToken = "";
-      if (executeRecaptcha) {
-        recaptchaToken = await executeRecaptcha("contact_form_submit");
-      }
+      const recaptchaToken = await getRecaptchaToken("contact_form_submit");
 
       const response = await fetch("/api/send", {
         method: "POST",
@@ -99,7 +110,9 @@ export default function ContactForm() {
     <div className="max-w-2xl mx-auto">
       <ReCAPTCHADebug />
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
+        onFocus={loadRecaptcha}
         className="form-container"
       >
         {/* Name Field */}

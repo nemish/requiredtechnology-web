@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import ReCAPTCHAProvider from "./components/ReCAPTCHAProvider";
 import { ConsentProvider } from "./components/ConsentProvider";
 import Analytics from "./components/Analytics";
 
@@ -45,7 +44,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ConsentProvider>
-          <ReCAPTCHAProvider>{children}</ReCAPTCHAProvider>
+          {children}
           <Analytics />
         </ConsentProvider>
       </body>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import ReCAPTCHAv2 from "./ReCAPTCHAv2";
+import { getRecaptchaToken } from "../lib/recaptcha";
 
 // Cookie utility functions
 function getCookie(name: string): string | null {
@@ -36,7 +36,6 @@ interface DebugInfo {
 }
 
 export default function ReCAPTCHADebug() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [debugInfo, setDebugInfo] = useState<DebugInfo>({
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "Not configured",
     isLoaded: false,
@@ -70,13 +69,12 @@ export default function ReCAPTCHADebug() {
   }, [isLoaded]);
 
   const testRecaptcha = async () => {
-    if (!executeRecaptcha) {
-      alert("reCAPTCHA not ready");
-      return;
-    }
-
     try {
-      const token = await executeRecaptcha("debug_test");
+      const token = await getRecaptchaToken("debug_test");
+      if (!token) {
+        alert("reCAPTCHA not ready");
+        return;
+      }
       setDebugInfo((prev) => ({
         ...prev,
         lastToken: token,

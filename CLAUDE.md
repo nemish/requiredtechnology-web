@@ -41,15 +41,15 @@ This is a Next.js 15 single-page marketing website for Required Technology using
 ### Project Structure
 ```
 app/
-├── layout.tsx           # Root layout with ReCAPTCHA provider and GA
+├── layout.tsx           # Root layout with consent provider and GA
 ├── page.tsx             # Single-page landing with all sections
 ├── globals.css          # Tailwind + custom CSS variables (color palette)
 ├── api/send/route.ts    # Contact form API (Resend + reCAPTCHA verification)
 ├── lib/gtag.ts          # Google Analytics utilities
+├── lib/recaptcha.ts     # Lazy reCAPTCHA v3 loader + token getter
 └── components/
-    ├── ContactForm.tsx      # Form with reCAPTCHA v3 integration
+    ├── ContactForm.tsx      # Form with lazy reCAPTCHA v3 integration
     ├── EmailTemplate/       # React Email template for contact notifications
-    ├── ReCAPTCHAProvider.tsx # GoogleReCaptchaProvider wrapper
     ├── ConsentProvider.tsx  # Owns cookie-consent state (localStorage-backed context)
     ├── Analytics.tsx        # Mounts GA only after consent is accepted
     ├── CookieBanner.tsx     # GDPR cookie consent (reads/writes via ConsentProvider)
