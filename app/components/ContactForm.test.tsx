@@ -135,6 +135,27 @@ describe("status announcements", () => {
   });
 });
 
+describe("reCAPTCHA attribution", () => {
+  it("shows the attribution with links to Google's policies instead of a site privacy policy", () => {
+    render(<ContactForm />);
+
+    expect(screen.queryByText(/our privacy policy/i)).toBeNull();
+    expect(
+      screen.getByText(/this site is protected by recaptcha/i)
+    ).toBeTruthy();
+    expect(
+      screen
+        .getByRole("link", { name: "Google Privacy Policy" })
+        .getAttribute("href")
+    ).toBe("https://policies.google.com/privacy");
+    expect(
+      screen
+        .getByRole("link", { name: "Terms of Service" })
+        .getAttribute("href")
+    ).toBe("https://policies.google.com/terms");
+  });
+});
+
 describe("form submission", () => {
   it("submits with a token when reCAPTCHA has loaded", async () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });

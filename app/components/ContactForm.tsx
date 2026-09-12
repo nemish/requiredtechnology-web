@@ -226,9 +226,27 @@ export default function ContactForm() {
           )}
         </button>
 
-        {/* Privacy Note */}
+        {/* reCAPTCHA attribution: required while the badge is hidden */}
         <p className="mt-8 text-xs text-center text-[var(--color-text-muted)]">
-          By submitting this form, you agree to our privacy policy. We'll never share your information.
+          This site is protected by reCAPTCHA and the{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white transition-colors"
+          >
+            Google Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white transition-colors"
+          >
+            Terms of Service
+          </a>{" "}
+          apply.
         </p>
       </form>
     </div>
