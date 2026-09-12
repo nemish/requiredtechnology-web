@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ConsentProvider } from "./components/ConsentProvider";
 import Analytics from "./components/Analytics";
@@ -7,7 +7,14 @@ import Analytics from "./components/Analytics";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -32,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${schibsted.variable} antialiased`}>
         <ConsentProvider>
           {children}
           <Analytics />
