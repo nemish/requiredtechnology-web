@@ -62,3 +62,13 @@ Custom CSS variables defined in globals.css following Coolors palette:
 - `--primary-blue`: #1b2a41
 - `--primary-blue-light`: #324a5f
 - `--light-accent`: #ccc9dc
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for `nemish/requiredtechnology-web` (via the `gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
