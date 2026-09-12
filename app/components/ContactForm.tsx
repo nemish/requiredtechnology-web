@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import ReCAPTCHADebug from "./ReCAPTCHADebug";
+import { useEffect, useRef, useState } from "react";
 import { event } from "../lib/gtag";
+import { getRecaptchaToken, loadRecaptcha } from "../lib/recaptcha";
 import { PaperAirplaneIcon, CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 interface FormData {
@@ -13,7 +12,7 @@ interface FormData {
 }
 
 export default function ContactForm() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -23,6 +22,21 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
+
+  // Load the reCAPTCHA script when the form scrolls into view, so a token
+  // is ready by submit time (focus is the fallback trigger).
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        loadRecaptcha();
+        observer.disconnect();
+      }
+    });
+    observer.observe(form);
+    return () => observer.disconnect();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,11 +54,7 @@ export default function ContactForm() {
     setSubmitStatus("idle");
 
     try {
-      // Generate reCAPTCHA token
-      let recaptchaToken = "";
-      if (executeRecaptcha) {
-        recaptchaToken = await executeRecaptcha("contact_form_submit");
-      }
+      const recaptchaToken = await getRecaptchaToken("contact_form_submit");
 
       const response = await fetch("/api/send", {
         method: "POST",
@@ -97,9 +107,10 @@ export default function ContactForm() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <ReCAPTCHADebug />
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
+        onFocus={loadRecaptcha}
         className="form-container"
       >
         {/* Name Field */}
@@ -162,31 +173,36 @@ export default function ContactForm() {
           />
         </div>
 
-        {/* Success Message */}
-        {submitStatus === "success" && (
-          <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
-            <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-emerald-400 font-medium text-sm">Message sent successfully!</p>
-              <p className="text-emerald-400/70 text-sm mt-1">
-                Thank you for reaching out. We'll get back to you soon.
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Status live region: persistent so assistive tech announces content swaps */}
+        <div role="status">
+          {isSubmitting && <p className="sr-only">Sending your message…</p>}
 
-        {/* Error Message */}
-        {submitStatus === "error" && (
-          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
-            <ExclamationCircleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-red-400 font-medium text-sm">Failed to send message</p>
-              <p className="text-red-400/70 text-sm mt-1">
-                Something went wrong. Please try again or contact us directly.
-              </p>
+          {/* Success Message */}
+          {submitStatus === "success" && (
+            <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-400 font-medium text-sm">Message sent successfully!</p>
+                <p className="text-emerald-400 text-sm mt-1">
+                  Thank you for reaching out. We'll get back to you soon.
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Error Message */}
+          {submitStatus === "error" && (
+            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+              <ExclamationCircleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-red-400 font-medium text-sm">Failed to send message</p>
+                <p className="text-red-400 text-sm mt-1">
+                  Something went wrong. Please try again or contact us directly.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <button
@@ -210,9 +226,27 @@ export default function ContactForm() {
           )}
         </button>
 
-        {/* Privacy Note */}
+        {/* reCAPTCHA attribution: required while the badge is hidden */}
         <p className="mt-8 text-xs text-center text-[var(--color-text-muted)]">
-          By submitting this form, you agree to our privacy policy. We'll never share your information.
+          This site is protected by reCAPTCHA and the{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white transition-colors"
+          >
+            Google Privacy Policy
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://policies.google.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white transition-colors"
+          >
+            Terms of Service
+          </a>{" "}
+          apply.
         </p>
       </form>
     </div>

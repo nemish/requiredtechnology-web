@@ -4,16 +4,22 @@ This guide will help you thoroughly test the reCAPTCHA integration in your conta
 
 ## 🧪 Testing Methods
 
-### 1. **Enable Test Mode (Required)**
+### 1. **Enable Test Mode (Development Only, Required)**
 
-The debug panel is hidden behind a cookie for security. To enable it:
+All debug tooling (`TestModeToggle`, `ReCAPTCHADebug`, the v2 fallback widget)
+is loaded through `app/components/DevTools.tsx`, which dynamically imports it
+only when `NODE_ENV` is `development` (`pnpm dev`). Production builds never
+reference or load these components, and the test-mode cookie exposes nothing
+in production.
+
+In development, the panel is additionally hidden behind a cookie. To enable it:
 
 **Option A: Use the Test Mode Toggle**
 
-- Look for the 🧪 button in the bottom-left corner (only visible in development)
+- Look for the 🧪 button in the bottom-left corner
 - Click it to open the test mode controls
 - Toggle "Test Mode: ON" to enable the debug panel
-- The debug panel will now appear on the contact form
+- The debug panel button will now appear in the bottom-right corner
 
 **Option B: Set Cookie Manually**
 Open your browser's developer console and run:
@@ -34,7 +40,7 @@ Then refresh the page.
 
 Once test mode is enabled:
 
-- Look for the red "Debug reCAPTCHA" button in the bottom-right corner of your contact form
+- Look for the red "Debug reCAPTCHA" button in the bottom-right corner of the page
 - Click it to open the debug panel
 - The panel shows:
   - Site key configuration
@@ -158,8 +164,9 @@ The debug panel provides real-time information:
 
 **Solutions**:
 
-- Check if `ReCAPTCHADebug` component is imported
-- Verify the component is rendered in `ContactForm`
+- Make sure you are running the dev server (`pnpm dev`) — the tooling is
+  excluded from production builds
+- Verify the test-mode cookie is enabled (🧪 toggle, bottom-left)
 - Check browser console for errors
 
 ## 🔍 Advanced Testing
@@ -186,14 +193,15 @@ const isValid = data.success && data.score >= 0.3; // Lower threshold
 Test different action names:
 
 ```typescript
-const token = await executeRecaptcha("contact_form_submit");
-const token = await executeRecaptcha("newsletter_signup");
-const token = await executeRecaptcha("login_attempt");
+const token = await getRecaptchaToken("contact_form_submit");
+const token = await getRecaptchaToken("newsletter_signup");
+const token = await getRecaptchaToken("login_attempt");
 ```
 
 ## 📝 Production Considerations
 
-1. **Remove Debug Panel**: Comment out or remove `ReCAPTCHADebug` in production
+1. **Debug Panel**: excluded from production automatically — `DevTools` only
+   dynamically imports it in development, so nothing needs removing by hand
 2. **Monitor Logs**: Set up logging to track reCAPTCHA performance
 3. **Score Analytics**: Monitor score distributions to optimize thresholds
 4. **Fallback Handling**: Ensure graceful degradation when reCAPTCHA fails

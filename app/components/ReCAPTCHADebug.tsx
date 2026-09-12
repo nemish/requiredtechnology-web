@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import ReCAPTCHAv2 from "./ReCAPTCHAv2";
+import { getRecaptchaToken } from "../lib/recaptcha";
 
 // Cookie utility functions
 function getCookie(name: string): string | null {
@@ -36,7 +36,6 @@ interface DebugInfo {
 }
 
 export default function ReCAPTCHADebug() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
   const [debugInfo, setDebugInfo] = useState<DebugInfo>({
     siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "Not configured",
     isLoaded: false,
@@ -50,16 +49,21 @@ export default function ReCAPTCHADebug() {
   const { isLoaded } = debugInfo;
 
   useEffect(() => {
+    // Development only — even a direct import can't expose this in production.
+    if (process.env.NODE_ENV !== "development") return;
     // Check if test mode is enabled via cookie
     const testModeCookie = getCookie("test-recaptcha-enabled");
     setIsTestModeEnabled(testModeCookie === "true");
+  }, []);
 
-    // Check if reCAPTCHA is loaded
+  // Poll for the reCAPTCHA script only while the panel is enabled and the
+  // script hasn't loaded yet — never for a visitor without test mode.
+  useEffect(() => {
+    if (!isTestModeEnabled || isLoaded) return;
+
     const checkRecaptchaLoaded = () => {
       if (typeof window !== "undefined" && window.grecaptcha) {
         setDebugInfo((prev) => ({ ...prev, isLoaded: true }));
-      } else {
-        setDebugInfo((prev) => ({ ...prev, isLoaded: false }));
       }
     };
 
@@ -67,16 +71,15 @@ export default function ReCAPTCHADebug() {
     const interval = setInterval(checkRecaptchaLoaded, 1000);
 
     return () => clearInterval(interval);
-  }, [isLoaded]);
+  }, [isTestModeEnabled, isLoaded]);
 
   const testRecaptcha = async () => {
-    if (!executeRecaptcha) {
-      alert("reCAPTCHA not ready");
-      return;
-    }
-
     try {
-      const token = await executeRecaptcha("debug_test");
+      const token = await getRecaptchaToken("debug_test");
+      if (!token) {
+        alert("reCAPTCHA not ready");
+        return;
+      }
       setDebugInfo((prev) => ({
         ...prev,
         lastToken: token,

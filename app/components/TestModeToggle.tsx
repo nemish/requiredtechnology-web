@@ -39,11 +39,8 @@ export default function TestModeToggle({
     setIsTestModeEnabled(!isTestModeEnabled);
   };
 
-  // Only show if in development or if test mode is already enabled
-  const shouldShow =
-    process.env.NODE_ENV === "development" || isTestModeEnabled;
-
-  if (!shouldShow) return null;
+  // Development only — the cookie alone can never surface this in production.
+  if (process.env.NODE_ENV !== "development") return null;
 
   return (
     <div className={`relative ${className}`}>
