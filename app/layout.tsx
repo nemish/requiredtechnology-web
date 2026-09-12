@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ReCAPTCHAProvider from "./components/ReCAPTCHAProvider";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { ConsentProvider } from "./components/ConsentProvider";
+import Analytics from "./components/Analytics";
 
 const inter = Inter({
   variable: "--font-montserrat-sans",
@@ -43,8 +44,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <ReCAPTCHAProvider>{children}</ReCAPTCHAProvider>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
+        <ConsentProvider>
+          <ReCAPTCHAProvider>{children}</ReCAPTCHAProvider>
+          <Analytics />
+        </ConsentProvider>
       </body>
     </html>
   );

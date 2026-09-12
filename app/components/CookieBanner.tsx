@@ -2,30 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { useConsent } from "./ConsentProvider";
 
 export default function CookieBanner() {
+  const { consent, setConsent } = useConsent();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Check if user has already accepted/declined cookies
-    const cookieConsent = localStorage.getItem("cookieConsent");
-    if (!cookieConsent) {
-      // Show banner after a short delay for better UX
-      setTimeout(() => setIsVisible(true), 1000);
-    }
-  }, []);
+    // Only show when consent has been read from storage and none was given
+    if (consent !== null) return;
+    // Show banner after a short delay for better UX
+    const timer = setTimeout(() => setIsVisible(true), 1000);
+    return () => clearTimeout(timer);
+  }, [consent]);
 
-  const handleAccept = () => {
-    localStorage.setItem("cookieConsent", "accepted");
-    setIsVisible(false);
-  };
-
-  const handleDecline = () => {
-    localStorage.setItem("cookieConsent", "declined");
-    setIsVisible(false);
-  };
-
-  if (!isVisible) return null;
+  if (consent !== null || !isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6 animate-slide-up">
@@ -69,13 +60,13 @@ export default function CookieBanner() {
             {/* Buttons */}
             <div className="flex gap-3 w-full sm:w-auto shrink-0">
               <button
-                onClick={handleDecline}
+                onClick={() => setConsent("declined")}
                 className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-medium text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] border border-[var(--color-border-default)] rounded-lg hover:text-white hover:border-[var(--color-border-accent)] transition-all"
               >
                 Decline
               </button>
               <button
-                onClick={handleAccept}
+                onClick={() => setConsent("accepted")}
                 className="btn-primary flex-1 sm:flex-none py-2.5 px-5 text-sm"
               >
                 Accept

@@ -94,7 +94,8 @@ requiredtechnology-web/
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack", 
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run"
   }
 }
 ```

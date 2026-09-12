@@ -11,11 +11,19 @@ pnpm install          # Install dependencies
 pnpm dev              # Start dev server (Next.js with Turbopack)
 pnpm build            # Production build (with Turbopack)
 pnpm start            # Start production server
+pnpm test             # Run test suite (Vitest, single run)
 pnpm add <package>    # Add dependency
 pnpm add -D <package> # Add dev dependency
 ```
 
 For CI/CD: `pnpm install --frozen-lockfile`
+
+## Testing
+
+Vitest + React Testing Library on jsdom, configured in `vitest.config.ts`. Test files
+are colocated with the code they test (`app/**/*.test.ts(x)`) and import from `vitest`
+explicitly (no globals) — call RTL's `cleanup()` in `afterEach` yourself. Run one file
+with `pnpm vitest run <path>`, or watch mode with `pnpm vitest`.
 
 ## Architecture
 
@@ -42,7 +50,9 @@ app/
     ├── ContactForm.tsx      # Form with reCAPTCHA v3 integration
     ├── EmailTemplate/       # React Email template for contact notifications
     ├── ReCAPTCHAProvider.tsx # GoogleReCaptchaProvider wrapper
-    ├── CookieBanner.tsx     # GDPR cookie consent
+    ├── ConsentProvider.tsx  # Owns cookie-consent state (localStorage-backed context)
+    ├── Analytics.tsx        # Mounts GA only after consent is accepted
+    ├── CookieBanner.tsx     # GDPR cookie consent (reads/writes via ConsentProvider)
     └── TestModeToggle.tsx   # Dev-only reCAPTCHA testing
 ```
 
