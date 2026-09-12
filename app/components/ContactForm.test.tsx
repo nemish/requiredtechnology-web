@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ContactForm from "./ContactForm";
 
@@ -73,6 +73,65 @@ describe("lazy reCAPTCHA loading", () => {
     const script = recaptchaScript();
     expect(script).not.toBeNull();
     expect(script!.src).toContain("render=test-site-key");
+  });
+});
+
+describe("status announcements", () => {
+  it("renders a polite live region from first render", () => {
+    render(<ContactForm />);
+    expect(screen.getByRole("status")).toBeTruthy();
+  });
+
+  it("announces success inside the live region", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true }));
+
+    render(<ContactForm />);
+    fillAndSubmit();
+
+    expect(
+      await within(screen.getByRole("status")).findByText(
+        "Message sent successfully!"
+      )
+    ).toBeTruthy();
+  });
+
+  it("announces failure inside the live region", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+
+    render(<ContactForm />);
+    fillAndSubmit();
+
+    expect(
+      await within(screen.getByRole("status")).findByText(
+        "Failed to send message"
+      )
+    ).toBeTruthy();
+  });
+
+  it("conveys the sending state while submitting", async () => {
+    let resolveFetch!: (value: { ok: boolean }) => void;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockReturnValue(
+        new Promise<{ ok: boolean }>((resolve) => {
+          resolveFetch = resolve;
+        })
+      )
+    );
+
+    render(<ContactForm />);
+    fillAndSubmit();
+
+    const button = await screen.findByRole("button", { name: /sending/i });
+    expect((button as HTMLButtonElement).disabled).toBe(true);
+    expect(
+      within(screen.getByRole("status")).getByText(/sending/i)
+    ).toBeTruthy();
+
+    resolveFetch({ ok: true });
+    expect(
+      await screen.findByText("Message sent successfully!")
+    ).toBeTruthy();
   });
 });
 

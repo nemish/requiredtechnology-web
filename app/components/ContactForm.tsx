@@ -173,31 +173,36 @@ export default function ContactForm() {
           />
         </div>
 
-        {/* Success Message */}
-        {submitStatus === "success" && (
-          <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
-            <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-emerald-400 font-medium text-sm">Message sent successfully!</p>
-              <p className="text-emerald-400/70 text-sm mt-1">
-                Thank you for reaching out. We'll get back to you soon.
-              </p>
-            </div>
-          </div>
-        )}
+        {/* Status live region: persistent so assistive tech announces content swaps */}
+        <div role="status">
+          {isSubmitting && <p className="sr-only">Sending your message…</p>}
 
-        {/* Error Message */}
-        {submitStatus === "error" && (
-          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
-            <ExclamationCircleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-red-400 font-medium text-sm">Failed to send message</p>
-              <p className="text-red-400/70 text-sm mt-1">
-                Something went wrong. Please try again or contact us directly.
-              </p>
+          {/* Success Message */}
+          {submitStatus === "success" && (
+            <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
+              <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-emerald-400 font-medium text-sm">Message sent successfully!</p>
+                <p className="text-emerald-400 text-sm mt-1">
+                  Thank you for reaching out. We'll get back to you soon.
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Error Message */}
+          {submitStatus === "error" && (
+            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+              <ExclamationCircleIcon className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-red-400 font-medium text-sm">Failed to send message</p>
+                <p className="text-red-400 text-sm mt-1">
+                  Something went wrong. Please try again or contact us directly.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <button
