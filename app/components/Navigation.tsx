@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRightIcon,
   CubeTransparentIcon,
@@ -14,6 +14,15 @@ export default function Navigation() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isMenuOpen]);
+
   return (
     <nav className="nav-glass fixed top-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,11 +32,9 @@ export default function Navigation() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <CubeTransparentIcon className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-white tracking-tight">
-                Required Technology
-              </h1>
-            </div>
+            <span className="text-lg font-bold text-white tracking-tight">
+              Required Technology
+            </span>
           </div>
 
           {/* Desktop Navigation */}
@@ -50,8 +57,10 @@ export default function Navigation() {
           {/* Mobile menu button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+            className="md:hidden p-2.5 text-gray-400 hover:text-white transition-colors"
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            aria-controls={isMenuOpen ? "mobile-menu" : undefined}
           >
             {isMenuOpen ? (
               <XMarkIcon className="w-6 h-6" />
@@ -64,7 +73,10 @@ export default function Navigation() {
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 right-0 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border-default)] animate-fade-in">
+        <div
+          id="mobile-menu"
+          className="md:hidden absolute top-20 left-0 right-0 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border-default)] animate-fade-in"
+        >
           <div className="px-4 py-6 space-y-4">
             <a
               href="#services"

@@ -61,13 +61,13 @@ export default function CookieBanner() {
             <div className="flex gap-3 w-full sm:w-auto shrink-0">
               <button
                 onClick={() => setConsent("declined")}
-                className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-medium text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] border border-[var(--color-border-default)] rounded-lg hover:text-white hover:border-[var(--color-border-accent)] transition-all"
+                className="flex-1 sm:flex-none min-h-11 px-5 py-2.5 text-sm font-medium text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] border border-[var(--color-border-default)] rounded-lg hover:text-white hover:border-[var(--color-border-accent)] transition-all"
               >
                 Decline
               </button>
               <button
                 onClick={() => setConsent("accepted")}
-                className="btn-primary flex-1 sm:flex-none py-2.5 px-5 text-sm"
+                className="btn-primary flex-1 sm:flex-none min-h-11 py-2.5 px-5 text-sm"
               >
                 Accept
               </button>

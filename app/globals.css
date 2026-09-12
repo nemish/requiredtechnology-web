@@ -67,6 +67,11 @@
 }
 
 
+/* Anchored sections land below the fixed nav (h-20 = 5rem) */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;

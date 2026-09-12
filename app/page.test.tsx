@@ -18,6 +18,11 @@ describe("page structural honesty", () => {
     expect(queryByText(/learn more/i)).toBeNull();
   });
 
+  it("contains exactly one h1", () => {
+    const { container } = render(<Home />);
+    expect(container.querySelectorAll("h1")).toHaveLength(1);
+  });
+
   it("keeps the footer contact details after removals", () => {
     const { getByText } = render(<Home />);
     const email = getByText("info@required.ee");
