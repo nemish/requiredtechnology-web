@@ -14,7 +14,7 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/outline";
 import ContactForm from "./components/ContactForm";
-import TestModeToggle from "./components/TestModeToggle";
+import DevTools from "./components/DevTools";
 import CookieBanner from "./components/CookieBanner";
 import Navigation from "./components/Navigation";
 
@@ -421,8 +421,8 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Test Mode Toggle - Only visible in development or when test mode is enabled */}
-      <TestModeToggle />
+      {/* reCAPTCHA debug tooling - development only, never bundled in production */}
+      <DevTools />
 
       {/* Cookie Consent Banner */}
       <CookieBanner />

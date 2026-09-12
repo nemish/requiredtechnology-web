@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import ReCAPTCHADebug from "./ReCAPTCHADebug";
 import { event } from "../lib/gtag";
 import { getRecaptchaToken, loadRecaptcha } from "../lib/recaptcha";
 import { PaperAirplaneIcon, CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
@@ -108,7 +107,6 @@ export default function ContactForm() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <ReCAPTCHADebug />
       <form
         ref={formRef}
         onSubmit={handleSubmit}

@@ -49,16 +49,21 @@ export default function ReCAPTCHADebug() {
   const { isLoaded } = debugInfo;
 
   useEffect(() => {
+    // Development only — even a direct import can't expose this in production.
+    if (process.env.NODE_ENV !== "development") return;
     // Check if test mode is enabled via cookie
     const testModeCookie = getCookie("test-recaptcha-enabled");
     setIsTestModeEnabled(testModeCookie === "true");
+  }, []);
 
-    // Check if reCAPTCHA is loaded
+  // Poll for the reCAPTCHA script only while the panel is enabled and the
+  // script hasn't loaded yet — never for a visitor without test mode.
+  useEffect(() => {
+    if (!isTestModeEnabled || isLoaded) return;
+
     const checkRecaptchaLoaded = () => {
       if (typeof window !== "undefined" && window.grecaptcha) {
         setDebugInfo((prev) => ({ ...prev, isLoaded: true }));
-      } else {
-        setDebugInfo((prev) => ({ ...prev, isLoaded: false }));
       }
     };
 
@@ -66,7 +71,7 @@ export default function ReCAPTCHADebug() {
     const interval = setInterval(checkRecaptchaLoaded, 1000);
 
     return () => clearInterval(interval);
-  }, [isLoaded]);
+  }, [isTestModeEnabled, isLoaded]);
 
   const testRecaptcha = async () => {
     try {
